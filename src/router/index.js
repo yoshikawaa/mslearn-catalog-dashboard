@@ -21,6 +21,11 @@ const routes = [
     component: () => import('../views/Catalog.vue'),
   },
   {
+    path: '/roles',
+    name: 'Roles',
+    component: () => import('../views/Roles.vue'),
+  },
+  {
     path: '/*',
     name: '404',
     component: () => import('../views/404.vue'),
@@ -31,4 +36,8 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeResolve((to, from, next) => {
+  if (from.name === null && to.name !== "Home") next({ name: "Home" })
+  else next()
+})
 export default router

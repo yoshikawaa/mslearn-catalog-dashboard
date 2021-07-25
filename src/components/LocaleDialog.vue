@@ -9,20 +9,34 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="text-h5">Change Locale</span>
+        <span class="text-h5">Configuration</span>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="12" sm="1">
-              <v-radio-group v-model="locale" mandatory @change="changed">
-                <v-radio
+            <v-col cols="12">
+              <p class="text-h5">Locale</p>
+              <v-btn-toggle v-model="locale" tile group mandatory>
+                <v-btn
                   v-for="item in locales"
                   :key="item.value"
-                  :label="item.label"
                   :value="item.value"
-                />
-              </v-radio-group>
+                  >{{ item.label }}</v-btn
+                >
+              </v-btn-toggle>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <p class="text-h5">Theme</p>
+              <v-btn-toggle v-model="dark" tile group mandatory>
+                <v-btn
+                  v-for="item in themes"
+                  :key="item.value"
+                  :value="item.value"
+                  >{{ item.label }}</v-btn
+                >
+              </v-btn-toggle>
             </v-col>
           </v-row>
         </v-container>
@@ -43,25 +57,33 @@ export default {
   props: ["isOpen"],
   data: () => ({
     dialog: false,
+    reload: false,
+    locale: "",
     locales: [
       { label: "English", value: "en-us" },
       { label: "Japanese", value: "ja-jp" },
     ],
-    locale: "",
+    dark: false,
+    themes: [
+      { label: "light", value: false },
+      { label: "dark", value: true },
+    ],
   }),
-  mounted() {
+  created() {
     this.dialog = this.isOpen;
     this.locale = this.$store.state.locale;
+    this.dark = this.$vuetify.theme.dark;
   },
   watch: {
-    dialog(newVal, oldVal) {
-      if (!newVal && oldVal) this.$emit("closed");
+    locale(newVal) {
+      this.$store.commit("locale", newVal);
+      this.reload = true;
     },
-  },
-  methods: {
-    changed() {
-      this.$store.commit("locale", this.locale);
-      this.dialog = false;
+    dark(newVal) {
+      this.$vuetify.theme.dark = newVal;
+    },
+    dialog(newVal, oldVal) {
+      if (!newVal && oldVal) this.$emit("closed", this.reload);
     },
   },
 };

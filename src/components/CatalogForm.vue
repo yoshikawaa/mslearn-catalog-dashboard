@@ -1,12 +1,11 @@
 <template>
   <v-row align="center" justify="center" class="mb-auto">
-    <v-col cols="12" offset-lg="1" lg="2" md="4" sm="6">
+    <v-col cols="12" lg="2" md="4" sm="6">
       <v-select
         label="Type"
         v-model="form.type"
         :items="types"
         chips
-        @change="changed"
       ></v-select>
     </v-col>
 
@@ -14,14 +13,12 @@
       <v-select
         label="Role"
         v-model="form.roles"
-        :items="catalog.roles"
+        :items="roles"
         item-text="name"
         item-value="id"
         multiple
         chips
         deletable-chips
-        @change="changed"
-        @click:clear="changed"
       ></v-select>
     </v-col>
 
@@ -29,14 +26,12 @@
       <v-select
         label="Product"
         v-model="form.products"
-        :items="catalog.products"
+        :items="products"
         item-text="name"
         item-value="id"
         multiple
         chips
         deletable-chips
-        @change="changed"
-        @click:clear="changed"
       ></v-select>
     </v-col>
 
@@ -44,14 +39,12 @@
       <v-select
         label="Level"
         v-model="form.levels"
-        :items="catalog.levels"
+        :items="levels"
         item-text="name"
         item-value="id"
         multiple
         chips
         deletable-chips
-        @change="changed"
-        @click:clear="changed"
       ></v-select>
     </v-col>
 
@@ -59,11 +52,19 @@
       <v-checkbox
         v-model="form.isOnlySelectedLocale"
         label="Selected Locale Only"
-        @change="changed"
       />
     </v-col>
 
     <v-col cols="12" lg="2" md="4" sm="6">
+      <v-select
+        label="Sort"
+        v-model="form.sort"
+        :items="sorts.filter((item) => item.types.includes(form.type))"
+        chips
+      ></v-select>
+    </v-col>
+
+    <v-col cols="12" lg="1" md="4" sm="6">
       <v-btn @click="reset">Reset</v-btn>
     </v-col>
   </v-row>
@@ -72,7 +73,6 @@
 <script>
 export default {
   name: "CatalogForm",
-  props: ["catalog"],
   data: () => ({
     form: {
       type: "l",
@@ -80,6 +80,7 @@ export default {
       products: [],
       levels: [],
       isOnlySelectedLocale: false,
+      sort: "p",
     },
   }),
   computed: {
@@ -94,11 +95,45 @@ export default {
             { text: "モジュール", value: "m" },
           ];
     },
+    roles() {
+      return this.$store.state.catalog.roles;
+    },
+    products() {
+      return this.$store.state.catalog.products;
+    },
+    levels() {
+      return this.$store.state.catalog.levels;
+    },
+    sorts() {
+      return this.$store.state.locale === "en-us"
+        ? [
+            { text: "Popularity", value: "p", types: ["l", "m"] },
+            { text: "Rating", value: "r", types: ["m"] },
+            { text: "Duration", value: "d", types: ["l", "m"] },
+          ]
+        : [
+            { text: "人気", value: "p", types: ["l", "m"] },
+            { text: "評価", value: "r", types: ["m"] },
+            { text: "時間", value: "d", types: ["l", "m"] },
+          ];
+    },
+  },
+  watch: {
+    "form.type"(newVal, oldVal) {
+      if (oldVal === "m" && newVal === "l" && this.form.sort === "r") {
+        this.form.sort = "p";
+      }
+    },
+    form: {
+      // require not arrow, but function.
+      handler: function(newVal) {
+        console.log(this);
+        this.$emit("change", newVal);
+      },
+      deep: true,
+    },
   },
   methods: {
-    changed() {
-      this.$emit("change", this.form);
-    },
     reset() {
       this.form = {
         type: "l",
@@ -106,8 +141,8 @@ export default {
         products: [],
         levels: [],
         isOnlySelectedLocale: false,
+        sort: "p",
       };
-      this.$emit("change", this.form);
     },
   },
 };
