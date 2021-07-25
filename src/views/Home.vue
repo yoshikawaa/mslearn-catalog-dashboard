@@ -1,18 +1,21 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container fluid fill-height>
+    <v-row align="center" justify="center">
+      <locale-dialog :isOpen="true" @closed="closed" />
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import LocaleDialog from "@/components/LocaleDialog.vue";
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+  components: { LocaleDialog },
+  name: "Home",
+  data: () => ({}),
+  methods: {
+    closed() {
+      this.$router.push("/catalog");
+    },
+  },
+};
 </script>

@@ -1,5 +1,7 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <v-container fluid fill-height>
+    <v-row align="center" justify="center">
+      <h1>This is an Unoffical Dashboard of Microsoft Learn Catalog.</h1>
+    </v-row>
+  </v-container>
 </template>
