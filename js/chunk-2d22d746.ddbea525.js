@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d22d746"],{f820:function(n,t,a){"use strict";a.r(t);var e=function(){var n=this,t=n.$createElement,a=n._self._c||t;return a("v-container",{attrs:{fluid:"","fill-height":""}},[a("v-row",{attrs:{align:"center",justify:"center"}},[a("h1",[n._v("This is an Unoffical Dashboard of Microsoft Learn Catalog.")])])],1)},r=[],i=a("2877"),o=a("6544"),l=a.n(o),s=a("a523"),c=a("0fd9"),f={},u=Object(i["a"])(f,e,r,!1,null,null,null);t["default"]=u.exports;l()(u,{VContainer:s["a"],VRow:c["a"]})}}]);
-//# sourceMappingURL=chunk-2d22d746.e3cc050a.js.map
+//# sourceMappingURL=chunk-2d22d746.ddbea525.js.map
