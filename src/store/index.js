@@ -14,9 +14,14 @@ const store = new Vuex.Store({
   state: {
     locale: language("ja") ? "ja-jp" : "en-us",
     catalog: [],
+    certifications: [],
     constants: {
+      msUrl: "https://docs.microsoft.com/",
       catalogUrl: "https://docs.microsoft.com/api/learn/catalog/",
       rolesUrl: "https://docs.microsoft.com/ja-jp/learn/roles/",
+      certificationsUrl: "https://docs.microsoft.com/ja-jp/learn/certifications/",
+      gitCertificationsUrl: "https://api.github.com/repos/MicrosoftDocs/learn-certs-pr.ja-jp/git/trees/master?recursive=true",
+      gitCertificationUrl: "https://raw.githubusercontent.com/MicrosoftDocs/learn-certs-pr.ja-jp/live/",
     }
   },
   mutations: {
@@ -34,7 +39,44 @@ const store = new Vuex.Store({
         role.popularity = average(role.rolePaths.map((e) => e.popularity));
       }
       state.catalog = catalog;
-    }
+    },
+    certification(state, certification) {
+      const catalog = state.catalog;
+      const paths = certification.paths;
+      // register name to certification
+      const name = certification.uid.replace("certification.", "");
+      certification.name = name;
+      // register learningPath to certification
+      certification.learningPaths = [];
+      certification.duration_in_minutes = 0;
+      if (paths && paths.length > 0) {
+        for (let j in paths) {
+          const learningPath = catalog.learningPaths.filter(
+            (item) => item.uid.includes(paths[j].uid)
+          )[0];
+          if (learningPath) {
+            certification.learningPaths.push(learningPath);
+            certification.duration_in_minutes += learningPath.duration_in_minutes;
+            // register certification to learningPath
+            if (learningPath.certifications) {
+              learningPath.certifications.push(name);
+            } else {
+              learningPath.certifications = [name];
+            }
+          }
+        }
+      }
+      // register popularity to certification
+      certification.popularity = (certification.learningPaths && certification.learningPaths.length > 0) ?
+        average(certification.learningPaths.map((e) => e.popularity)) : 0;
+      state.certifications.push(certification);
+      state.certifications.sort(
+        (a, b) => b.popularity - a.popularity
+      );
+    },
+    certifications(state, certifications) {
+      state.certifications = certifications;
+    },
   },
   getters: {
     catalogUrl: (state) => () => {

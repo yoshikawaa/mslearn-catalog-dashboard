@@ -33,11 +33,17 @@
       bottom
     >
       <v-list nav dense>
-        <v-list-item link @click="navigate('roles')">
+        <v-list-item link @click="navigate('/roles')">
           <v-list-item-icon>
             <v-icon>mdi-account-multiple</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Roles</v-list-item-title>
+        </v-list-item>
+        <v-list-item link @click="navigate('/certifications')">
+          <v-list-item-icon>
+            <v-icon>mdi-shield-account</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Certifications</v-list-item-title>
         </v-list-item>
         <v-list-item link @click="navigate('/catalog')">
           <v-list-item-icon>

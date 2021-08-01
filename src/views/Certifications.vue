@@ -7,22 +7,21 @@
           lg="2"
           md="3"
           sm="4"
-          v-for="item in roles"
-          :key="item.id"
+          v-for="item in certifications"
+          :key="item.uid"
         >
           <v-card shaped height="100%">
             <v-avatar tile size="60" class="ml-4 mt-4">
-              <v-icon
+              <v-img
+                alt="Role Logo"
                 class="shrink"
-                color="primary"
                 contain
-                x-large
+                :src="$store.state.constants.msUrl + item.iconUrl"
                 transition="scale-transition"
-                >mdi-account-multiple</v-icon
-              >
+              />
             </v-avatar>
             <v-card-title>
-              {{ item.name }}
+              {{ item.title }}
             </v-card-title>
             <v-card-subtitle>
               <v-progress-linear
@@ -35,19 +34,25 @@
                   {{ Math.floor(value) }}% Popular
                 </template>
               </v-progress-linear>
+              <div class="duration">
+                <template v-if="Math.floor(item.duration_in_minutes / 60) > 0">
+                  {{ Math.floor(item.duration_in_minutes / 60) }} h
+                </template>
+                {{ item.duration_in_minutes % 60 }} m
+              </div>
             </v-card-subtitle>
             <v-card-text>
               <chart
-                :key="item.name"
+                :key="item.uid"
                 :labels="levels"
                 :data="[
-                  item.rolePaths.filter((item) =>
+                  item.learningPaths.filter((item) =>
                     item.levels.includes(levels[0])
                   ).length,
-                  item.rolePaths.filter((item) =>
+                  item.learningPaths.filter((item) =>
                     item.levels.includes(levels[1])
                   ).length,
-                  item.rolePaths.filter((item) =>
+                  item.learningPaths.filter((item) =>
                     item.levels.includes(levels[2])
                   ).length,
                 ]"
@@ -56,7 +61,7 @@
             <v-card-actions class="justify-end mr-4 mb-4">
               <v-btn
                 color="primary"
-                :href="$store.state.constants.rolesUrl + item.id"
+                :href="$store.state.constants.certificationsUrl + item.name"
                 target="_blank"
                 >Link</v-btn
               >
@@ -72,13 +77,16 @@
 import Chart from "@/components/Chart.vue";
 export default {
   components: { Chart },
-  name: "Catalog",
+  name: "Certifications",
   data: () => ({
     levels: ["beginner", "intermediate", "advanced"],
   }),
   computed: {
-    roles() {
-      return this.$store.state.catalog.roles;
+    certifications() {
+      return this.$store.state.certifications;
+    },
+    learningPaths() {
+      return this.$store.state.catalog.learningPaths;
     },
   },
 };

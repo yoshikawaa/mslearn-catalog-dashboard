@@ -3,19 +3,20 @@
     v-model="dialog"
     transition="dialog-bottom-transition"
     max-width="300px"
+    @keydown="dialog = false"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn v-bind="attrs" v-on="on"> Open Dialog </v-btn>
     </template>
     <v-card>
-      <v-card-title>
-        <span class="text-h5">Configuration</span>
+      <v-card-title  class="grey darken-3 text-h5 white--text">
+        <span>Configuration</span>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12">
-              <p class="text-h5">Locale</p>
+              <p class="text-h6">Locale</p>
               <v-btn-toggle v-model="locale" tile group mandatory>
                 <v-btn
                   v-for="item in locales"
@@ -26,9 +27,10 @@
               </v-btn-toggle>
             </v-col>
           </v-row>
+          <v-divider class="mt-4 mb-4" />
           <v-row>
             <v-col cols="12">
-              <p class="text-h5">Theme</p>
+              <p class="text-h6">Theme</p>
               <v-btn-toggle v-model="dark" tile group mandatory>
                 <v-btn
                   v-for="item in themes"
@@ -53,7 +55,7 @@
 
 <script>
 export default {
-  name: "LocaleDialog",
+  name: "ConfigDialog",
   props: ["isOpen"],
   data: () => ({
     dialog: false,
