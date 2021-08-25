@@ -9,6 +9,7 @@
           sm="4"
           v-for="item in certifications"
           :key="item.uid"
+          :id="item.uid"
         >
           <v-card shaped height="100%">
             <v-avatar tile size="60" class="ml-4 mt-4">
@@ -58,10 +59,42 @@
                 ]"
               ></chart>
             </v-card-text>
+            <v-card-actions class="justify-center">
+              <v-btn-toggle dense>
+                <v-btn
+                  v-for="exam in item.examNames"
+                  :key="exam"
+                  :href="$store.getters.examsUrl(exam)"
+                  target="_blank"
+                >
+                  {{ exam }}
+                </v-btn>
+                <v-menu
+                  v-if="item.prerequisites"
+                  bottom
+                  offset-y
+                  transition="slide-y-transition"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-bind="attrs" v-on="on">prereq</v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      v-for="pre in item.prerequisites"
+                      :key="pre.uid"
+                      :href="$store.getters.certificationsUrl(pre.uid.replace('certification.', ''))"
+                      target="_blank"
+                    >
+                      <v-list-item-title>{{ certifications.filter((item) => item.uid.includes(pre.uid))[0].title }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-btn-toggle>
+            </v-card-actions>
             <v-card-actions class="justify-end mr-4 mb-4">
               <v-btn
                 color="primary"
-                :href="$store.state.constants.certificationsUrl + item.name"
+                :href="$store.getters.certificationsUrl(item.name)"
                 target="_blank"
                 >Link</v-btn
               >

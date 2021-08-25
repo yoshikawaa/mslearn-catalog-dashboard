@@ -17,9 +17,11 @@ const store = new Vuex.Store({
     certifications: [],
     constants: {
       msUrl: "https://docs.microsoft.com/",
+      rolesPath: "/learn/roles/",
+      certificationsPath: "/learn/certifications/",
+      examsPath: "/learn/certifications/exams/",
+      supportPath: "/learn/support/catalog-api",
       catalogUrl: "https://docs.microsoft.com/api/learn/catalog/",
-      rolesUrl: "https://docs.microsoft.com/ja-jp/learn/roles/",
-      certificationsUrl: "https://docs.microsoft.com/ja-jp/learn/certifications/",
       gitCertificationsUrl: "https://api.github.com/repos/MicrosoftDocs/learn-certs-pr.ja-jp/git/trees/master?recursive=true",
       gitCertificationUrl: "https://raw.githubusercontent.com/MicrosoftDocs/learn-certs-pr.ja-jp/live/",
     }
@@ -42,13 +44,13 @@ const store = new Vuex.Store({
     },
     certification(state, certification) {
       const catalog = state.catalog;
-      const paths = certification.paths;
       // register name to certification
       const name = certification.uid.replace("certification.", "");
       certification.name = name;
       // register learningPath to certification
       certification.learningPaths = [];
       certification.duration_in_minutes = 0;
+      const paths = certification.paths;
       if (paths && paths.length > 0) {
         for (let j in paths) {
           const learningPath = catalog.learningPaths.filter(
@@ -69,6 +71,16 @@ const store = new Vuex.Store({
       // register popularity to certification
       certification.popularity = (certification.learningPaths && certification.learningPaths.length > 0) ?
         average(certification.learningPaths.map((e) => e.popularity)) : 0;
+      // register exams to certification
+      certification.examNames = [];
+      const exams = certification.exams;
+      if (exams && exams.length > 0) {
+        for (let k in exams) {
+          const exam = exams[k].uid.replace("exam.", "");
+          certification.examNames.push(exam);
+        }
+      }
+      // register certification to state
       state.certifications.push(certification);
       state.certifications.sort(
         (a, b) => b.popularity - a.popularity
@@ -82,6 +94,18 @@ const store = new Vuex.Store({
     catalogUrl: (state) => () => {
       const url = state.constants.catalogUrl;
       return (state.locale === "") ? url : url + "?locale=" + state.locale;
+    },
+    rolesUrl: (state) => (role) => {
+      return state.constants.msUrl + state.locale + state.constants.rolesPath + role;
+    },
+    certificationsUrl: (state) => (certification) => {
+      return state.constants.msUrl + state.locale + state.constants.certificationsPath + certification;
+    },
+    examsUrl: (state) => (exam) => {
+      return state.constants.msUrl + state.locale + state.constants.examsPath + exam;
+    },
+    supportUrl: (state) => () => {
+      return state.constants.msUrl + state.locale + state.constants.supportPath;
     },
     filterCatalog: (state) => (form) => {
       // non filter.
@@ -110,8 +134,8 @@ const store = new Vuex.Store({
       // sort
       return filteredItems.sort((a, b) =>
         (form.sort === "d") ? b.duration_in_minutes - a.duration_in_minutes :
-        (form.sort === "r" && a.rating.average && a.rating.average) ? b.rating.average - a.rating.average :
-        b.popularity - a.popularity);
+          (form.sort === "r" && a.rating.average && a.rating.average) ? b.rating.average - a.rating.average :
+            b.popularity - a.popularity);
     }
   }
 })

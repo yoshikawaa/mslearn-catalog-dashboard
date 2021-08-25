@@ -56,7 +56,7 @@
             <v-card-actions class="justify-end mr-4 mb-4">
               <v-btn
                 color="primary"
-                :href="$store.state.constants.rolesUrl + item.id"
+                :href="$store.getters.rolesUrl(item.id)"
                 target="_blank"
                 >Link</v-btn
               >

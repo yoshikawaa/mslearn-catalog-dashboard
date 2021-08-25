@@ -10,7 +10,7 @@
           </v-col>
           <v-col class="shrink">
             <v-btn
-              href="https://docs.microsoft.com/en-us/learn/support/catalog-api"
+              :href="$store.getters.supportUrl()"
               target="_blank"
               >Link</v-btn
             >
