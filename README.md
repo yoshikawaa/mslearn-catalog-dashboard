@@ -15,6 +15,11 @@ npm run serve
 npm run build
 ```
 
+### Deploy built pages to Github Pages
+```
+npm run deploy
+```
+
 ### Run your unit tests
 ```
 npm run test:unit

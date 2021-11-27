@@ -22,7 +22,7 @@ const store = new Vuex.Store({
       examsPath: "/learn/certifications/exams/",
       supportPath: "/learn/support/catalog-api",
       catalogUrl: "https://docs.microsoft.com/api/learn/catalog/",
-      gitCertificationsUrl: "https://api.github.com/repos/MicrosoftDocs/learn-certs-pr.ja-jp/git/trees/master?recursive=true",
+      gitCertificationsUrl: "https://api.github.com/repos/MicrosoftDocs/learn-certs-pr.ja-jp/git/trees/live?recursive=true",
       gitCertificationUrl: "https://raw.githubusercontent.com/MicrosoftDocs/learn-certs-pr.ja-jp/live/",
     }
   },
